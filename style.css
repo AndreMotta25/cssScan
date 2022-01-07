@@ -11,7 +11,6 @@
   border-radius: 20px;
 
   border: none;
-  display: block;
 }
 .btn:focus {
   box-shadow: 4px 4px 4px black;
@@ -55,4 +54,8 @@ a {
 
 .btn1.btn {
   cursor: pointer;
+}
+
+#pai .btn1.btn {
+  display: block;
 }

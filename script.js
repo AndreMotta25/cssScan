@@ -6,6 +6,11 @@ elementos.forEach((elemento) => {
   //   elemento.addEventListener(`mouseleave`, retirar);
 });
 
+function shuffle(inputArray) {
+  inputArray.sort(() => Math.random() - 0.5);
+  return inputArray;
+}
+
 // serve para retirar a classe dos elementos igual ao efeitoSelecionar, mas e para quando o mouse sair do elemento
 function retirar() {
   const elementos = document.querySelectorAll(`.selecionado`);
@@ -202,7 +207,6 @@ function procuraSeletoresConcatenados(id, classes) {
 // vai receber um objeto contendo todas as regras css de um elemento  em especifico
 function evitaDuplicatas(objCss) {
   const regrasLimpas = [];
-
   const regrasSemiLimpas = objCss.regrasCss.filter((regra) => {
     if (
       !(regra.seletor == regra.seletor_array[regra.seletor_array.length - 1])
@@ -220,5 +224,6 @@ function evitaDuplicatas(objCss) {
       regrasLimpas.push(regrasSemiLimpas[index]);
     }
   }
+
   return regrasLimpas;
 }
