@@ -16,6 +16,7 @@ var matches = Function.call.bind(
 
 // Retorna verdadeiro se um elemento DOM corresponder a um cssRule
 var elementMatchCSSRule = function (element, cssRule) {
+  console.log(element);
   return matches(element, cssRule.selectorText);
 };
 
@@ -30,14 +31,16 @@ var propertyInCSSRule = function (prop, cssRule) {
  * rules é o acumulador. rules é um array, pq o segundo parametro do callback é um array
  *
  * */
+// vai conter todas as regras css
 var cssRules = slice(document.styleSheets).reduce(function (rules, styleSheet) {
-  console.log(rules);
+  // console.log(slice(styleSheet.cssRules));
+  // sendo rules o acumulador, todas as styleSheets serao concatenadass nele
   return rules.concat(slice(styleSheet.cssRules));
 }, []);
 
-// obtenha apenas as regras de css que correspondem a esse elemento
 var getAppliedCss = function (elm) {
-  // get only the css rules that matches that element
+  // obtenha apenas as regras de css que correspondem a esse elemento
+  console.log(cssRules);
   var elementRules = cssRules.filter(elementMatchCSSRule.bind(null, elm));
   var rules = [];
   if (elementRules.length) {
@@ -61,10 +64,7 @@ var getAppliedCss = function (elm) {
 
 function showStyle() {
   var styleSheetList = document.styleSheets;
-
-  console.log(styleSheetList);
   const elementos = document.querySelectorAll(`body *`);
-  console.log(elementos);
   elementos.forEach((elemento) => {
     elemento.addEventListener(`click`, () => {
       var rules = getAppliedCss(elemento);
