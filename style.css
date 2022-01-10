@@ -73,3 +73,10 @@ a {
 .btn:active {
   border-radius: 20px;
 }
+
+#pai:hover .btn {
+  margin: 10px;
+}
+#container2 #button2 {
+  background-color: lightblue;
+}

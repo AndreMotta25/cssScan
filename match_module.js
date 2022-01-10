@@ -14,5 +14,9 @@ function init() {
       match.findRules(elem);
     });
   });
+  // match.target(document.querySelector(`.btn`));
+  // match.insertRule("font-size", "30px");
+  match.insertRule(`.btn {font-size:30px;}`);
 }
+
 init();
