@@ -1,4 +1,5 @@
 import InlineRules from "./inlineRules.js";
+import findCaracter from "./findCaracter.js";
 class Match {
   #elem;
   #allRules;
@@ -12,8 +13,20 @@ class Match {
     this.#elem = elem;
     const DadosObj = this.montaDadosElemento(this.#elem);
     for (let regra of this.#allRules) {
-      if (this.#elem.matches(regra.selectorText)) {
+      if (
+        this.#elem.matches(regra.selectorText) &&
+        regra.selectorText.indexOf(`:`) < 0
+      ) {
         DadosObj.rules_array.push(regra);
+      }
+      // vai descobrir uma pseudo classe do elemento e vai colocar no array de pseudo-classe
+      else if (findCaracter(":", regra.selectorText) == 1) {
+        let rule = regra.selectorText.split(`:`)[0];
+        if (this.#elem.matches(rule)) {
+          DadosObj.pseudo_classes.push(regra);
+        }
+      } else {
+        continue;
       }
     }
     // DadosObj.rules.push(this.getInlineRules(this.#elem));
@@ -39,13 +52,14 @@ class Match {
       pai: this.getIdentity(elem.parentElement),
       identidade: this.getIdentity(elem),
       rules_array: [],
+      pseudo_classes: [],
     };
     return DadosObj;
   }
   /**Retorna uma identificacao do elemento passado */
   getIdentity(elem) {
     let id;
-
+    // depois rever isso aqui
     if (elem.getAttribute(`id`)) {
       id = `#` + elem.getAttribute(`id`);
     } else if (elem.classList[0]) {

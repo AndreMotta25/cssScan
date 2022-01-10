@@ -8,7 +8,6 @@
 }
 .btn {
   width: 100px;
-  border-radius: 20px;
 
   border: none;
 }
@@ -58,4 +57,19 @@ a {
 
 #pai .btn1.btn {
   display: block;
+}
+
+#pai::after {
+  content: "";
+  display: block;
+  width: 30px;
+  background-color: aqua;
+  border-radius: 50%;
+  height: 100px;
+}
+.btn:hover {
+  margin: 10px;
+}
+.btn:active {
+  border-radius: 20px;
 }
