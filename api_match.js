@@ -62,7 +62,7 @@ class Match {
     this.#allRules = regras;
   }
 
-  // Como o nome diz, monta um objeto com as informacoes do elemento clicado, faz uso de getInfo()
+  // Como o nome diz, monta um objeto com as informacoes do elemento clicado, faz u.so de getInfo()
   montaDadosElemento(elem) {
     let DadosObj = {
       id_elemento: elem.getAttribute(`id`) ? elem.getAttribute(`id`) : " ",
