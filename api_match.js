@@ -38,7 +38,7 @@ class Match {
     }
     // DadosObj.rules.push(this.getInlineRules(this.#elem));
     // DadosObj.rules = this.treatingRules(DadosObj.rules_array);
-    this.treatingRules();
+    this.treatingRules(DadosObj);
     console.log(DadosObj);
   }
   /** Vai Pegar todas as folhas de estilos externas e colocar suas regras dentro de um array*/
@@ -117,15 +117,84 @@ class Match {
     this.#elem = elem;
   }
 
-  treatingRules() {
-    let ponto = "/.gi";
-    console.log(
-      // findCaracter(".", "div.barra p.bio"),
-      // findCaracter("#", "div.barra p.bio"),
-      "div.barra p.bio".replace(/\./gi, "$"),
-      "div#barra p#bio".replace(/\#/gi, "$")
-    );
-    console.log();
+  treatingRules(obj) {
+    // let rules = [];
+    // findCaracter(".", "div.barra p.bio"),
+    // findCaracter("#", "div.barra p.bio"),
+    // "div.barra p.bio".replace(/\./gi, "$"),
+    // "div#barra p#bio".replace(/\#/gi, "$")
+    function replaceKeys(rule) {
+      // rule = replaceSemicolon(rule.cssText)
+      rule = rule.cssText
+        .replace(/ /g, "")
+        .replace("{", "$")
+        .replace("}", "$")
+        .split("$");
+      rule.pop();
+      rule[1] = splitSemicolon(rule);
+      return rule;
+    }
+    function splitSemicolon(rule) {
+      rule = rule[1].split(";");
+      rule.pop();
+      return rule;
+    }
+    function desestruturaRules(obj) {
+      const rules = [];
+      obj.rules_array.forEach((rule) => {
+        rules.push(replaceKeys(rule));
+      });
+      obj.rules_array = rules;
+    }
+    function replaceAll(texto) {
+      console.log(texto);
+      texto = texto
+        .replace(/\#/gi, "$#")
+        .replace(/\./gi, "$.")
+        .replace(/ /g, "$");
+      console.log(texto);
+      texto = texto.split("$");
+      // texto.shift();
+      console.log(texto);
+      let elementos = texto.map((elem) => {
+        // console.log(elem);
+        if (!elem.startsWith(".") && !elem.startsWith("#")) {
+          return elem;
+        }
+      });
+    }
+    function order(texto) {
+      let id = findCaracter("#", texto);
+      let classes = findCaracter(".", texto);
+      let elementos = replaceAll("div#container2");
+      return `0 ${id ? id : 0} ${classes ? classes : 0} 0`;
+    }
+    desestruturaRules(obj);
+    let rules = obj.rules_array.map((rule, index) => {
+      let regras = rule[1].map((array) => {
+        // console.log(array.split(":"));
+        // console.log({ propriedade: array.split(":")[0] });
+        // return array.split(":");
+        return {
+          propriedade: array.split(":")[0],
+          valor: array.split(":")[1],
+          seletor: rule[0],
+          indice: index,
+          ordem: order(rule[0]),
+        };
+      });
+      return regras;
+      // console.log(regras);
+      // let regra;
+      // rule[1].forEach((prop) => {
+      //   regra = {
+      //     propriedade: prop.split(":")[0],
+      //     valor: prop.split(":")[1],
+      //   };
+      // });
+      // return regra;
+    });
+    console.log(rules);
   }
 }
 export default Match;
