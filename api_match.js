@@ -147,53 +147,57 @@ class Match {
       obj.rules_array = rules;
     }
     function replaceAll(texto) {
-      console.log(texto);
+      const elementos = [];
+
       texto = texto
         .replace(/\#/gi, "$#")
         .replace(/\./gi, "$.")
-        .replace(/ /g, "$");
-      console.log(texto);
-      texto = texto.split("$");
-      // texto.shift();
-      console.log(texto);
-      let elementos = texto.map((elem) => {
-        // console.log(elem);
+        .replace(/ /g, "$")
+        .split("$");
+      // caso o primeiro elemento do array seja um elemento vazio , vamos retira-lo
+      texto[0] === "" ? texto.shift() : texto[0];
+      texto.forEach((elem) => {
         if (!elem.startsWith(".") && !elem.startsWith("#")) {
-          return elem;
+          console.log(elem);
+          elementos.push(elem);
         }
       });
+      console.log(elementos);
+      return elementos.length;
     }
     function order(texto) {
       let id = findCaracter("#", texto);
       let classes = findCaracter(".", texto);
-      let elementos = replaceAll("div#container2");
-      return `0 ${id ? id : 0} ${classes ? classes : 0} 0`;
+      let elementos = replaceAll(texto);
+      return `0 ${id ? id : 0} ${classes ? classes : 0} ${elementos}`;
     }
     desestruturaRules(obj);
-    let rules = obj.rules_array.map((rule, index) => {
-      let regras = rule[1].map((array) => {
-        // console.log(array.split(":"));
-        // console.log({ propriedade: array.split(":")[0] });
-        // return array.split(":");
-        return {
+    // let rules = obj.rules_array.map((rule, index) => {
+    //   let regras = rule[1].map((array) => {
+    //     return {
+    //       propriedade: array.split(":")[0],
+    //       valor: array.split(":")[1],
+    //       seletor: rule[0],
+    //       indice: index,
+    //       ordem: order(rule[0]),
+    //     };
+    //   });
+    //   return regras;
+    // });
+    const rules = [];
+    obj.rules_array.forEach((rule, index) => {
+      rule[1].forEach((array) => {
+        let regra = {
           propriedade: array.split(":")[0],
           valor: array.split(":")[1],
           seletor: rule[0],
           indice: index,
           ordem: order(rule[0]),
         };
+        rules.push(regra);
       });
-      return regras;
-      // console.log(regras);
-      // let regra;
-      // rule[1].forEach((prop) => {
-      //   regra = {
-      //     propriedade: prop.split(":")[0],
-      //     valor: prop.split(":")[1],
-      //   };
-      // });
-      // return regra;
     });
+
     console.log(rules);
   }
 }
