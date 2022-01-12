@@ -4,7 +4,6 @@ class Match {
   #elem;
   #allRules;
 
-  /**Vai iniciar o getAllRulesCss*/
   constructor() {
     // this.getAllRulesCss();
   }
@@ -118,13 +117,8 @@ class Match {
   }
 
   treatingRules(obj) {
-    // let rules = [];
-    // findCaracter(".", "div.barra p.bio"),
-    // findCaracter("#", "div.barra p.bio"),
-    // "div.barra p.bio".replace(/\./gi, "$"),
-    // "div#barra p#bio".replace(/\#/gi, "$")
+    // usei essas classes como closures pq só vão ser utilizadas aqui
     function replaceKeys(rule) {
-      // rule = replaceSemicolon(rule.cssText)
       rule = rule.cssText
         .replace(/ /g, "")
         .replace("{", "$")
@@ -166,7 +160,7 @@ class Match {
     function order(texto) {
       let id = findCaracter("#", texto);
       let classes = findCaracter(".", texto);
-      let elementos = replaceAll("div#container2");
+      let elementos = replaceAll(texto);
       return `0 ${id ? id : 0} ${classes ? classes : 0} 0`;
     }
     desestruturaRules(obj);
