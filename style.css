@@ -1,4 +1,4 @@
-#container {
+div#container {
   width: 400px;
   height: 300px;
   background-color: blueviolet;
@@ -25,6 +25,7 @@
 }
 .selecionado {
   border: 2px dotted red;
+  width: 200px;
 }
 a {
   border-radius: 10px;
@@ -82,4 +83,7 @@ a {
 }
 div#container2 {
   background-color: lightgreen;
+}
+#container {
+  display: block;
 }

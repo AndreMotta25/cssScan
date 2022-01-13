@@ -115,12 +115,13 @@ class Match {
   target(elem) {
     this.#elem = elem;
   }
-
+  // usei essas funçoes como closures pq só vão ser utilizadas aqui
   treatingRules(obj) {
-    // usei essas classes como closures pq só vão ser utilizadas aqui
+    // vai retirar as chaves de cada regraCSS, faz uso do splitSemicolon
     function replaceKeys(rule) {
+      console.log(rule);
       rule = rule.cssText
-        .replace(/ /g, "")
+        .replace(/ /g, " ")
         .replace("{", "$")
         .replace("}", "$")
         .split("$");
@@ -128,11 +129,15 @@ class Match {
       rule[1] = splitSemicolon(rule);
       return rule;
     }
+    // vai dividir as regras aonde tiver ;
     function splitSemicolon(rule) {
       rule = rule[1].split(";");
       rule.pop();
       return rule;
     }
+    /*vai usar o replaceKeys para retirar as chaves, essa funçao da uma diminuida no rules_array
+    pelo que lembro, desestruturaRules ainda vai fazer retirar o ; atraves do replaceKeys que usa 
+    o splitSemicolon*/
     function desestruturaRules(obj) {
       const rules = [];
       obj.rules_array.forEach((rule) => {
@@ -140,9 +145,10 @@ class Match {
       });
       obj.rules_array = rules;
     }
+    // modifica a string do seletor para descobrir a ordem de procedencia, que
+    // faz uso dessa funçao é a order
     function replaceAll(texto) {
       const elementos = [];
-
       texto = texto
         .replace(/\#/gi, "$#")
         .replace(/\./gi, "$.")
@@ -152,13 +158,12 @@ class Match {
       texto[0] === "" ? texto.shift() : texto[0];
       texto.forEach((elem) => {
         if (!elem.startsWith(".") && !elem.startsWith("#")) {
-          console.log(elem);
           elementos.push(elem);
         }
       });
-      console.log(elementos);
       return elementos.length;
     }
+    // retorna a ordem de procedencia
     function order(texto) {
       let id = findCaracter("#", texto);
       let classes = findCaracter(".", texto);
@@ -166,34 +171,64 @@ class Match {
 
       return `0 ${id ? id : 0} ${classes ? classes : 0} ${elementos}`;
     }
-    desestruturaRules(obj);
-    // let rules = obj.rules_array.map((rule, index) => {
-    //   let regras = rule[1].map((array) => {
-    //     return {
-    //       propriedade: array.split(":")[0],
-    //       valor: array.split(":")[1],
-    //       seletor: rule[0],
-    //       indice: index,
-    //       ordem: order(rule[0]),
-    //     };
-    //   });
-    //   return regras;
-    // });
-    const rules = [];
-    obj.rules_array.forEach((rule, index) => {
-      rule[1].forEach((array) => {
-        let regra = {
-          propriedade: array.split(":")[0],
-          valor: array.split(":")[1],
-          seletor: rule[0],
-          indice: index,
-          ordem: order(rule[0]),
-        };
-        rules.push(regra);
-      });
-    });
 
-    console.log(rules);
+    function criaObjetoRegra() {
+      desestruturaRules(obj);
+      const rules = [];
+      obj.rules_array.forEach((rule, index) => {
+        rule[1].forEach((array) => {
+          let regra = {
+            propriedade: array.split(":")[0],
+            valor: array.split(":")[1],
+            seletor: rule[0],
+            indice: index,
+            ordem: order(rule[0]),
+            ativo: null,
+          };
+          rules.push(regra);
+        });
+      });
+      obj.rules_array = rules;
+      return obj.rules_array;
+    }
+    function existe(rules) {
+      const objRegras = {};
+      rules.forEach((prop) => {
+        if (objRegras.hasOwnProperty(prop["propriedade"])) {
+          // caso os seletores sejam iguais
+          if (objRegras[prop["propriedade"]]["seletor"] == prop["seletor"]) {
+            let objPropriedade = objRegras[prop["propriedade"]];
+            /** 
+               caso o seletor seja igual, quer dizer que temos um impate, e o indice vai usar a logica da
+               cascata e vai desempatar
+             */
+            prop["ativo"] =
+              objPropriedade["indice"] < prop["indice"] ? true : false;
+            objPropriedade["ativo"] =
+              objPropriedade["indice"] < prop["indice"] ? false : true;
+          } else {
+            let objPropriedade = objRegras[prop["propriedade"]];
+            if (objPropriedade["ordem"] != prop["ordem"]) {
+              prop["ativo"] =
+                objPropriedade["ordem"] < prop["ordem"] ? true : false;
+              objPropriedade["ativo"] =
+                objPropriedade["ordem"] > prop["ordem"] ? true : false;
+            } else {
+              prop["ativo"] =
+                objPropriedade["indice"] < prop["indice"] ? true : false;
+              objPropriedade["ativo"] =
+                objPropriedade["indice"] < prop["indice"] ? false : true;
+            }
+          }
+        } else {
+          prop["ativo"] = true;
+          objRegras[prop["propriedade"]] = prop;
+        }
+      });
+    }
+    criaObjetoRegra();
+    existe(obj.rules_array);
+    // console.log(rules);
   }
 }
 export default Match;
