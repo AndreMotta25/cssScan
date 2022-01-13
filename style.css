@@ -1,4 +1,4 @@
-#container {
+div#container {
   width: 400px;
   height: 300px;
   background-color: blueviolet;
@@ -8,10 +8,8 @@
 }
 .btn {
   width: 100px;
-  border-radius: 20px;
 
   border: none;
-  display: block;
 }
 .btn:focus {
   box-shadow: 4px 4px 4px black;
@@ -27,6 +25,7 @@
 }
 .selecionado {
   border: 2px dotted red;
+  width: 200px;
 }
 a {
   border-radius: 10px;
@@ -44,6 +43,7 @@ a {
 }
 #container2 .btn {
   font-size: 18px;
+  border-radius: 15px;
 }
 
 #container #pai .btn {
@@ -55,4 +55,36 @@ a {
 
 .btn1.btn {
   cursor: pointer;
+}
+
+#pai .btn1.btn {
+  display: block;
+}
+
+#pai::after {
+  content: "";
+  display: block;
+  width: 30px;
+  background-color: aqua;
+  border-radius: 50%;
+  height: 100px;
+}
+.btn:hover {
+  margin: 10px;
+}
+.btn:active {
+  border-radius: 20px;
+}
+
+#pai:hover .btn {
+  margin: 10px;
+}
+#container2 #button2 {
+  background-color: lightblue;
+}
+div#container2 {
+  background-color: lightgreen;
+}
+#container {
+  display: block;
 }

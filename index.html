@@ -6,18 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style2.css" />
   </head>
   <body>
     <div id="container">
-      <div id="pai">
-        <button class="btn btn1" id="botao">click</button>
+      <div id="pai" class="as">
+        <button class="btn btn1">click</button>
       </div>
       <a href="">voltar</a>
     </div>
     <div id="container2">
-      <button class="btn" id="button2">click2</button>
+      <button
+        class="btn selecionado"
+        id="button2"
+        style="margin: 10px; border-radius: 10px"
+      >
+        click2
+      </button>
     </div>
   </body>
-  <!-- <script src="teste.js"></script> -->
-  <script src="script.js"></script>
+  <!-- <script src="./api_match.js"></script>
+  <script src="./inline.js"></script> -->
+  <script>
+    // const match = new Match();
+    // const elementosHtml = document.querySelectorAll(`body *`);
+    // elementosHtml.forEach((elem) => {
+    //   elem.addEventListener(`click`, (e) => {
+    //     e.stopPropagation();
+    //     match.findRules(elem);
+    //   });
+    // });
+  </script>
+  <!-- <script src="./trash/teste.js"></script> -->
+  <!-- <script src="script.js"></script> -->
+  <!-- <script src="testeConcatenado.js"></script> -->
+  <!-- <script src="match.js"></script> -->
+  <script src="match_module.js" type="module"></script>
 </html>
