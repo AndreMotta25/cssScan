@@ -36,7 +36,7 @@ class Match {
       }
     }
     // DadosObj.rules.push(this.getInlineRules(this.#elem));
-    // DadosObj.rules = this.treatingRules(DadosObj.rules_array);
+    // console.log(this.getInlineRules(this.#elem));
     this.treatingRules(DadosObj);
     console.log(DadosObj);
   }
@@ -103,23 +103,18 @@ class Match {
    * DadosObj vai ter uma nova propriedade chamada rules. Vai ser aqui que vamos usar o getInlineRules *
    * */
   buildRules() {}
+
   /**Vai inserir uma regra em uma das folhas de extilos externa, escreva uma regra como se fosse
-   * colocar no css mesmo*/
+   * colocar no css mesmo, a regra nao vai ser especifica do elemento selecionado*/
   insertRule(rule) {
-    // insertRule(rule, value) {
-    // this.#elem.style[rule] = value;
     const folha = document.styleSheets[0];
     folha.insertRule(rule, folha.cssRules.length);
   }
-  // acho que so vai ser usado no insertRule *
-  target(elem) {
-    this.#elem = elem;
-  }
   // usei essas funçoes como closures pq só vão ser utilizadas aqui
   treatingRules(obj) {
+    const objMaster = this;
     // vai retirar as chaves de cada regraCSS, faz uso do splitSemicolon
     function replaceKeys(rule) {
-      console.log(rule);
       rule = rule.cssText
         .replace(/ /g, " ")
         .replace("{", "$")
@@ -138,7 +133,7 @@ class Match {
     /*vai usar o replaceKeys para retirar as chaves, essa funçao da uma diminuida no rules_array
     pelo que lembro, desestruturaRules ainda vai fazer retirar o ; atraves do replaceKeys que usa 
     o splitSemicolon*/
-    function desestruturaRules(obj) {
+    function simplificaRules(obj) {
       const rules = [];
       obj.rules_array.forEach((rule) => {
         rules.push(replaceKeys(rule));
@@ -169,11 +164,12 @@ class Match {
       let classes = findCaracter(".", texto);
       let elementos = replaceAll(texto);
 
-      return `0 ${id ? id : 0} ${classes ? classes : 0} ${elementos}`;
+      // return `0 ${id ? id : 0} ${classes ? classes : 0} ${elementos}`;
+      return Number(`0${id ? id : 0}${classes ? classes : 0}${elementos}`);
     }
 
     function criaObjetoRegra() {
-      desestruturaRules(obj);
+      simplificaRules(obj);
       const rules = [];
       obj.rules_array.forEach((rule, index) => {
         rule[1].forEach((array) => {
@@ -191,7 +187,9 @@ class Match {
       obj.rules_array = rules;
       return obj.rules_array;
     }
-    function existe(rules) {
+    function validaRegras(rules) {
+      const regrasInlines = objMaster.getInlineRules(objMaster.#elem);
+      rules = [...rules, ...regrasInlines];
       const objRegras = {};
       rules.forEach((prop) => {
         if (objRegras.hasOwnProperty(prop["propriedade"])) {
@@ -224,10 +222,12 @@ class Match {
           prop["ativo"] = true;
           objRegras[prop["propriedade"]] = prop;
         }
+        obj.rules_array = rules;
+        // console.log(rules);
       });
     }
     criaObjetoRegra();
-    existe(obj.rules_array);
+    validaRegras(obj.rules_array);
     // console.log(rules);
   }
 }
