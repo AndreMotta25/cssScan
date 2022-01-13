@@ -35,8 +35,7 @@ class Match {
         continue;
       }
     }
-    // DadosObj.rules.push(this.getInlineRules(this.#elem));
-    // console.log(this.getInlineRules(this.#elem));
+
     this.treatingRules(DadosObj);
     console.log(DadosObj);
   }
@@ -93,6 +92,7 @@ class Match {
     };
     return info.identificacao;
   }
+  /**Vai ser usada por treatingRules, serve para pegar as regras inlines*/
   getInlineRules(elem) {
     const inline = new InlineRules(elem);
     return inline.getInlineRules();
@@ -156,7 +156,15 @@ class Match {
           elementos.push(elem);
         }
       });
-      return elementos.length;
+      // retirando um erro
+      let elementosTot = [];
+      elementos.forEach((elem) => {
+        if (elem != "") {
+          elementosTot.push(elem);
+        }
+      });
+      console.log(elementosTot);
+      return elementosTot.length;
     }
     // retorna a ordem de procedencia
     function order(texto) {
@@ -165,9 +173,9 @@ class Match {
       let elementos = replaceAll(texto);
 
       // return `0 ${id ? id : 0} ${classes ? classes : 0} ${elementos}`;
-      return Number(`0${id ? id : 0}${classes ? classes : 0}${elementos}`);
+      // return Number(`0${id ? id : 0}${classes ? classes : 0}${elementos}`);
+      return `0${id ? id : 0}${classes ? classes : 0}${elementos}`;
     }
-
     function criaObjetoRegra() {
       simplificaRules(obj);
       const rules = [];
@@ -178,8 +186,9 @@ class Match {
             valor: array.split(":")[1],
             seletor: rule[0],
             indice: index,
-            ordem: order(rule[0]),
+            ordem: Number(order(rule[0])),
             ativo: null,
+            procedencia: order(rule[0]),
           };
           rules.push(regra);
         });
@@ -187,6 +196,7 @@ class Match {
       obj.rules_array = rules;
       return obj.rules_array;
     }
+    /** Descobre quais regras css estão ativa*/
     function validaRegras(rules) {
       const regrasInlines = objMaster.getInlineRules(objMaster.#elem);
       rules = [...rules, ...regrasInlines];
