@@ -190,3 +190,6 @@ o elemento acabava por aparecer muito rapido */
     transform: translate(0%, -30%);
   }
 }
+.selecionado {
+  border: 2px solid red;
+}
