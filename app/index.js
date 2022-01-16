@@ -4,20 +4,12 @@ const janelaScan = {
   estatica: false,
 };
 elementos.forEach((elemento) => {
-  elemento.addEventListener(`mouseover`, efeitoSelecionar);
-  elemento.addEventListener(`mouseout`, retirar);
+  elemento.addEventListener(`mouseover`, abrirJanela);
+  elemento.addEventListener(`mouseout`, fecharJanela);
 });
-window.addEventListener("keydown", (e) => {
-  console.log(e);
-  if (e.key == " " && !janelaScan.estatica) {
-    janelaScan.estatica = true;
-  } else {
-    janelaScan.estatica = false;
-    retirar(e);
-  }
-});
+
 // serve para retirar a classe dos elementos igual ao efeitoSelecionar, mas e para quando o mouse sair do elemento
-function retirar(e) {
+function fecharJanela(e) {
   e.stopPropagation();
   const elementos = document.querySelectorAll(`.selecionado`);
   if (elementos) {
@@ -35,7 +27,7 @@ function retirar(e) {
  * Quando o mouse passar por cima de um elemento, o js vai colocar uma classe chamada selecionado,
  * que serve para colocar uma borda no elemento  html, para mostrar que  o mesmo esta em evidencia
  * */
-function efeitoSelecionar(e) {
+function abrirJanela(e) {
   /*Para o js colocar a classe selecionado em outro elemento, o mesmo deve verificar se nao existe mas nenhum outro
         caso exista, a classe sera retirada
       */
@@ -138,9 +130,23 @@ function montarJanela() {
       <footer>
         <p>Desenvolvido por Andre Motta</p>
       </footer>`;
+
     document.body.appendChild(div);
   }
 }
 function insertRule() {}
 function copy() {}
-function tornarEstatico() {}
+function initTornarEstatico() {
+  window.addEventListener("keydown", (e) => {
+    console.log(e);
+    if (e.key == " " && !janelaScan.estatica) {
+      janelaScan.estatica = true;
+    } else {
+      janelaScan.estatica = false;
+      fecharJanela(e);
+    }
+  });
+}
+
+// iniciando funcoes
+initTornarEstatico();
