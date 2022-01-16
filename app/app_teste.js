@@ -8,21 +8,16 @@ class Interface {
     this.controls.static = false;
     this.match = new Match();
     this.janela = this.buildWindow(elem);
-    // this.elem = elem;
     this.iniciarComandos();
   }
   handlePress(e) {
-    console.log(`entrei`);
     e.stopPropagation();
-    if (e.key == " " && !this.controls.static && this.controls.ativo) {
+    if (e.key == `F1` && !this.controls.static && this.controls.ativo) {
       this.controls.static = true;
       this.controls.ativo = true;
-      console.log(`tornando estatico`);
-    } else if (e.key == " " && this.controls.static && this.controls.ativo) {
+    } else if (e.key == "F1" && this.controls.static && this.controls.ativo) {
       this.controls.static = false;
-
       this.destroy();
-      console.log(`fechando `);
       let x = 0;
       while (x <= 10) {
         x += 1;
@@ -445,29 +440,29 @@ class Match {
     // console.log(DadosObj);
     console.log(this.#allRules);
     for (let regra of this.#allRules) {
-      if (regra) {
-        if (
-          this.#elem.matches(regra.selectorText) &&
-          regra.selectorText.indexOf(`:`) < 0
-        ) {
-          DadosObj.rules_array.push(regra);
-        }
-        // vai descobrir uma pseudo classe do elemento e vai colocar no array de pseudo-classes
-        else if (this.findCaracter(":", regra.selectorText) == 1) {
-          let rule = regra.selectorText.split(`:`)[0];
-          if (this.#elem.matches(rule)) {
-            DadosObj.pseudo_classes.push(regra);
-          }
-          // vai descobrir um pseudo-elemento do elemento e vai colocar no array de pseudo-elementos
-        } else if (this.findCaracter(":", regra.selectorText) == 2) {
-          let rule = regra.selectorText.split(`:`)[0];
-          if (this.#elem.matches(rule)) {
-            DadosObj.pseudo_elementos.push(regra);
-          }
-        } else {
-          continue;
-        }
+      // if (regra) {
+      if (
+        this.#elem.matches(regra.selectorText) &&
+        regra.selectorText.indexOf(`:`) < 0
+      ) {
+        DadosObj.rules_array.push(regra);
       }
+      // vai descobrir uma pseudo classe do elemento e vai colocar no array de pseudo-classes
+      else if (this.findCaracter(":", regra.selectorText) == 1) {
+        let rule = regra.selectorText.split(`:`)[0];
+        if (this.#elem.matches(rule)) {
+          DadosObj.pseudo_classes.push(regra);
+        }
+        // vai descobrir um pseudo-elemento do elemento e vai colocar no array de pseudo-elementos
+      } else if (this.findCaracter(":", regra.selectorText) == 2) {
+        let rule = regra.selectorText.split(`:`)[0];
+        if (this.#elem.matches(rule)) {
+          DadosObj.pseudo_elementos.push(regra);
+        }
+      } else {
+        continue;
+      }
+      // }
     }
     console.log(DadosObj);
     return this.treatingRules(DadosObj);

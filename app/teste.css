@@ -4,6 +4,7 @@
   color: blueviolet;
   margin: 0 auto;
   border-radius: 10px;
+  background-color: lightblue;
 }
 @keyframes showToolTipTravar {
   from {
