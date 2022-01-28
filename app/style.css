@@ -1,0 +1,198 @@
+/* inicio efeitos um tanto especificos */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+.item-sobreescrito {
+  text-decoration: line-through 2px white;
+}
+.tooltip {
+  padding: 10px 20px;
+  background-color: #393939;
+  border-radius: 10px;
+  color: #40e03d;
+  font-size: 18px;
+  letter-spacing: 3px;
+  position: absolute;
+  opacity: 1;
+  display: block;
+  visibility: hidden;
+}
+.btn {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+/* fim efeitos um tanto especificos */
+/* ============================================= */
+#container {
+  background-color: #444444;
+  max-width: 420px;
+  border-radius: 20px;
+  margin: 50px auto;
+  position: absolute;
+  top: 0px;
+  right: 50%;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: #312f2f;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.header-container-item-name {
+  font-size: 24px;
+  letter-spacing: 3px;
+  color: #00b2ff;
+  font-weight: 100;
+}
+.header-container-item-parent:hover .tooltip {
+  animation: showToolTip ease-in 0.6s forwards;
+}
+#body {
+  padding: 20px;
+}
+.body-item-regras {
+  margin-bottom: 80px;
+}
+.body-item-regras .item-regra {
+  list-style: none;
+}
+.body-item-regras .item-regra .propriedade-item {
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: #fba31e;
+}
+.body-item-regras .item-regra .valor-item {
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: #cc4ef8;
+}
+
+.box-rules {
+  background-color: #565555;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 25%);
+}
+#box-rules-item-box {
+  color: #cc4ef8;
+  width: 80%;
+  border: none;
+  background-color: #565555;
+  outline: none;
+  border-radius: 10px;
+  font-size: 18px;
+  min-height: 148px;
+  padding: 15px;
+  resize: none;
+}
+/* vai sumir com o scroll do textArea */
+#box-rules-item-box::-webkit-scrollbar {
+  width: 4px;
+}
+#box-rules-item-insert {
+  position: relative;
+}
+
+#box-rules-item-insert .item:hover {
+  background-color: rgba(0, 0, 0, 50%);
+  border-radius: 50%;
+}
+#box-rules-item-insert:hover .tooltip {
+  animation: showToolTip ease-in 0.6s forwards;
+}
+
+#lista-opcoes {
+  display: flex;
+  max-width: 350px;
+  justify-content: space-between;
+  margin: 20px auto;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 25%);
+  background-color: #565555;
+  border-radius: 10px;
+  padding: 0 20px;
+  position: relative;
+}
+#lista-opcoes .lista-opcoes-item {
+  list-style-type: none;
+}
+
+.lista-opcoes-item .mini-modal {
+  width: 100%;
+  max-width: 200px;
+  position: absolute;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #312f2f;
+  color: #40e03d;
+  letter-spacing: 3px;
+  padding: 15px;
+  border-radius: 10px;
+  opacity: 0;
+  visibility: hidden;
+}
+.lista-opcoes-item:hover .mini-modal {
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.7s;
+}
+.lista-opcoes-item:hover .tooltip {
+  animation: showToolTipTravar ease-in 0.6s forwards;
+}
+
+footer {
+  width: 100%;
+  background-color: #312f2f;
+  text-align: center;
+  padding: 10px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: #00b2ff;
+}
+/* tiver que usar a animação pq ao colocar o elemento de 
+supetao na tela o transition nao funcionava e assim 
+o elemento acabava por aparecer muito rapido */
+@keyframes showToolTip {
+  from {
+    opacity: 0;
+    transform: translate(52%, -250%);
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(52%, -120%);
+  }
+}
+@keyframes showToolTipTravar {
+  from {
+    opacity: 0;
+    transform: translate(00%, -250%);
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0%, -30%);
+  }
+}
+.selecionado {
+  border: 2px solid red;
+}

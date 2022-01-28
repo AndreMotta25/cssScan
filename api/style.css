@@ -1,0 +1,89 @@
+div#container {
+  width: 400px;
+  height: 300px;
+  background-color: blueviolet;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn {
+  width: 100px;
+
+  border: none;
+}
+.btn:focus {
+  box-shadow: 4px 4px 4px black;
+  transition: all 0.1s;
+}
+
+.btn {
+  text-transform: uppercase;
+}
+
+#container .btn {
+  color: coral;
+}
+.selecionado {
+  border: 2px dotted red;
+}
+a {
+  border-radius: 10px;
+  padding: 10px;
+  background-color: gold;
+  display: block;
+}
+
+#pai {
+  padding: 40px;
+  background-color: burlywood;
+}
+#pai .btn {
+  font-weight: bold;
+}
+#container2 .btn {
+  font-size: 18px;
+  border-radius: 15px;
+}
+
+#container #pai .btn {
+  padding: 10px;
+}
+#container2 #button2 {
+  background-color: chartreuse;
+}
+
+.btn1.btn {
+  cursor: pointer;
+}
+
+#pai .btn1.btn {
+  display: block;
+}
+
+#pai::after {
+  content: "";
+  display: block;
+  width: 30px;
+  background-color: aqua;
+  border-radius: 50%;
+  height: 100px;
+}
+.btn:hover {
+  margin: 10px;
+}
+.btn:active {
+  border-radius: 20px;
+}
+
+#pai:hover .btn {
+  margin: 10px;
+}
+#container2 #button2 {
+  background-color: lightblue;
+}
+div#container2 {
+  background-color: lightgreen;
+}
+#container {
+  display: block;
+}

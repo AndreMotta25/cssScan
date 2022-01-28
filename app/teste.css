@@ -1,0 +1,19 @@
+.cont {
+  max-width: 500px;
+  font-size: 18px;
+  color: blueviolet;
+  margin: 0 auto;
+  border-radius: 10px;
+  background-color: lightblue;
+}
+@keyframes showToolTipTravar {
+  from {
+    opacity: 0;
+    transform: translate(00%, -250%);
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0%, -30%);
+  }
+}
