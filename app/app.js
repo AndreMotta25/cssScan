@@ -1,37 +1,52 @@
+// "use strict";
 // vamos criar a interface orientada a objetos
+var eventoWindow = false;
 class Interface {
-  constructor() {
-    this.ativo = false;
-    this.static = false;
+  constructor(elem, controls) {
+    this.controls = controls;
+    this.controls.ativo = true;
+    this.controls.static = false;
     this.match = new Match();
-    this.makeStatic();
+    this.janela = this.buildWindow(elem);
+    this.iniciarComandos();
   }
-
-  makeStatic() {
-    const evento = window.addEventListener("keydown", (e) => {
-      console.log(`evento teclado`);
-      e.stopPropagation();
-      console.log(this);
-      if (e.key == " " && !this.estatica) {
-        this.estatica = true;
-      } else if (e.key == " " && this.estatica == true) {
-        this.estatica = false;
-
-        fecharJanela(e);
+  handlePress(e) {
+    e.stopPropagation();
+    if (e.key == `F1` && !this.controls.static && this.controls.ativo) {
+      this.controls.static = true;
+      this.controls.ativo = true;
+    } else if (e.key == "F1" && this.controls.static && this.controls.ativo) {
+      this.controls.static = false;
+      this.destroy();
+      let x = 0;
+      while (x <= 10) {
+        x += 1;
       }
-    });
+    }
   }
-  buildWindow(elem, e) {
-    this.elem = elem;
-    this.rules = this.match.findRules(elem);
+  makeStatic() {
+    if (!window.eventoWindow) {
+      window.addEventListener("keydown", (e) => {
+        this.handlePress(e);
+      });
+      window.eventoWindow = true;
+    }
+  }
+  // console.log(this.janela);
+  // this.janela.addEventListener("keydown", this.handlePress);
 
+  buildWindow(elem) {
+    this.elem = elem;
+    this.elem.classList.add(`selecionado`);
+    this.rules = this.match.findRules(elem);
     console.log(this.rules);
-    if (!this.ativo) {
-      this.ativo = true;
-      const div = document.createElement("div");
-      div.setAttribute("id", "container32443254");
-      console.log(e);
-      div.innerHTML = `
+    // if (!this.ativo) {
+    // this.ativo = true;
+
+    const div = document.createElement("div");
+    div.setAttribute("id", "container32443254");
+    // console.log(e);
+    div.innerHTML = `
       <header class="header-container">
         <h2 id="name" class="header-container-item-name">#container</h2>
         <div
@@ -103,16 +118,12 @@ class Interface {
       <footer>
         <p>Desenvolvido por Andre Motta</p>
       </footer>`;
-      document.body.appendChild(div);
+    document.body.appendChild(div);
 
-      this.iniciarComandos();
-      // const container = document.querySelector(`#container32443254`);
-      // console.log(container);
-      // container.style.left = e.clientX - 10 + "px";
-      // container.style.top = e.clientY - 10 + "px";
-      div.style.left = e.clientX - 10 + "px";
-      div.style.top = e.clientY - 10 + "px";
-    }
+    // div.style.left = e.clientX - 10 + "px";
+    // div.style.top = e.clientY - 10 + "px";
+    return div;
+    // }
   }
   // aqui vai chamar a api
   initInsertRule() {
@@ -140,6 +151,9 @@ class Interface {
 }
 .item-sobreescrito {
   text-decoration: line-through 2px white;
+}
+.selecionado {
+  border: 2px dotted red;
 }
 .tooltip {
   padding: 10px 20px;
@@ -336,10 +350,27 @@ o elemento acabava por aparecer muito rapido */
   }
   iniciarComandos() {
     this.initInsertRule();
+    this.initStyle();
+    this.makeStatic();
+    // this.initCopy();
   }
   makeEvent(elem, type, func) {
     elem.addEventListener(type, func);
     return elem;
+  }
+  /**Vai destruir a janela*/
+  destroy() {
+    if (this.controls.ativo && !this.controls.static) {
+      this.controls.ativo = false;
+      this.initStyle();
+      // this.janela.removeEventListener("keydown", this.handlePress);
+      console.log(this.janela);
+      // this.janela.remove();
+      this.elem.classList.remove(`selecionado`);
+      document.body.removeChild(document.querySelector(`#container32443254`));
+    } else {
+      console.log(`Impossivel destruir a janela `);
+    }
   }
 }
 
@@ -371,7 +402,6 @@ class InlineRules {
         objRules.push(regra);
       }
     });
-    console.log(objRules);
     return objRules;
   }
 }
@@ -385,17 +415,21 @@ class Match {
   }
   /**Acha as regras css do elemento passado*/
   findCaracter(caracter, texto) {
-    let count = 0;
     let totRepeat = [];
-    let pos;
+    if (caracter && texto) {
+      let count = 0;
 
-    while (pos != -1) {
-      count++;
-      pos = texto.indexOf(caracter, pos + 1 /* o mesmo que 3 + 1 */);
-      if (pos != -1) {
-        totRepeat.push(pos);
+      let pos;
+
+      while (pos != -1) {
+        count++;
+        pos = texto.indexOf(caracter, pos + 1 /* o mesmo que 3 + 1 */);
+        if (pos != -1) {
+          totRepeat.push(pos);
+        }
       }
     }
+
     return totRepeat.length;
   }
   findRules(elem) {
@@ -403,32 +437,34 @@ class Match {
     this.#elem = elem;
     const DadosObj = this.montaDadosElemento(this.#elem);
     // console.log(this.#allRules);
+    // console.log(DadosObj);
+    console.log(this.#allRules);
     for (let regra of this.#allRules) {
-      if (regra.hasOwnProperty(`selectorText`)) {
-        if (
-          this.#elem.matches(regra.selectorText) &&
-          regra.selectorText.indexOf(`:`) < 0
-        ) {
-          DadosObj.rules_array.push(regra);
-        }
-        // vai descobrir uma pseudo classe do elemento e vai colocar no array de pseudo-classes
-        else if (this.findCaracter(":", regra.selectorText) == 1) {
-          let rule = regra.selectorText.split(`:`)[0];
-          if (this.#elem.matches(rule)) {
-            DadosObj.pseudo_classes.push(regra);
-          }
-          // vai descobrir um pseudo-elemento do elemento e vai colocar no array de pseudo-elementos
-        } else if (this.findCaracter(":", regra.selectorText) == 2) {
-          let rule = regra.selectorText.split(`:`)[0];
-          if (this.#elem.matches(rule)) {
-            DadosObj.pseudo_elementos.push(regra);
-          }
-        } else {
-          continue;
-        }
+      // if (regra) {
+      if (
+        this.#elem.matches(regra.selectorText) &&
+        regra.selectorText.indexOf(`:`) < 0
+      ) {
+        DadosObj.rules_array.push(regra);
       }
+      // vai descobrir uma pseudo classe do elemento e vai colocar no array de pseudo-classes
+      else if (this.findCaracter(":", regra.selectorText) == 1) {
+        let rule = regra.selectorText.split(`:`)[0];
+        if (this.#elem.matches(rule)) {
+          DadosObj.pseudo_classes.push(regra);
+        }
+        // vai descobrir um pseudo-elemento do elemento e vai colocar no array de pseudo-elementos
+      } else if (this.findCaracter(":", regra.selectorText) == 2) {
+        let rule = regra.selectorText.split(`:`)[0];
+        if (this.#elem.matches(rule)) {
+          DadosObj.pseudo_elementos.push(regra);
+        }
+      } else {
+        continue;
+      }
+      // }
     }
-
+    console.log(DadosObj);
     return this.treatingRules(DadosObj);
   }
   /** Vai Pegar todas as folhas de estilos externas e colocar suas regras dentro de um array*/
@@ -556,12 +592,11 @@ class Match {
     }
     // retorna a ordem de procedencia
     function order(texto) {
-      let id = this.findCaracter("#", texto);
-      let classes = this.findCaracter(".", texto);
+      console.log(objMaster);
+      let id = objMaster.findCaracter("#", texto);
+      let classes = objMaster.findCaracter(".", texto);
       let elementos = replaceAll(texto);
 
-      // return `0 ${id ? id : 0} ${classes ? classes : 0} ${elementos}`;
-      // return Number(`0${id ? id : 0}${classes ? classes : 0}${elementos}`);
       return `0${id ? id : 0}${classes ? classes : 0}${elementos}`;
     }
     function criaObjetoRegra() {
@@ -663,10 +698,28 @@ function fecharJanela(e) {
   }
 }
 
+let windowInterface = {};
+var controls = {
+  ativo: false,
+  static: false,
+};
 const elementos = document.querySelectorAll(`body *`);
-const windowInterface = new Interface();
-console.log(elementos);
 elementos.forEach((elemento) => {
-  elemento.addEventListener(`mouseover`, abrirJanela);
-  elemento.addEventListener(`mouseout`, fecharJanela);
+  elemento.addEventListener(`mouseover`, (e) => {
+    e.stopPropagation();
+    if (!controls.ativo) {
+      console.log(`iniciando`);
+      windowInterface = new Interface(elemento, controls);
+    }
+
+    // windowInterface.ativo = true;
+  });
+  elemento.addEventListener(`mouseout`, (e) => {
+    if (!controls.static && controls.ativo) {
+      e.stopPropagation();
+      console.log(`saindo`);
+      // console.log(windowInterface.static);
+      windowInterface.destroy();
+    }
+  });
 });
