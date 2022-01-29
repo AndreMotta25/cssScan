@@ -6,16 +6,17 @@ class Interface {
     this.controls = controls;
     this.controls.ativo = true;
     this.controls.static = false;
+    this.rulesStorageToCopy = "";
     this.match = new Match();
     this.janela = this.buildWindow(elem);
     this.iniciarComandos();
   }
   handlePress(e) {
     e.stopPropagation();
-    if (e.key == `F1` && !this.controls.static && this.controls.ativo) {
+    if (e.key == `F2` && !this.controls.static && this.controls.ativo) {
       this.controls.static = true;
       this.controls.ativo = true;
-    } else if (e.key == "F1" && this.controls.static && this.controls.ativo) {
+    } else if (e.key == "F2" && this.controls.static && this.controls.ativo) {
       this.controls.static = false;
       this.destroy();
       let x = 0;
@@ -66,6 +67,7 @@ class Interface {
             .map((elem) => {
               console.log(elem);
               if (elem.ativo) {
+                this.rulesStorageToCopy += `${elem.propriedade}:${elem.valor};`;
                 return `
               <li class='item-regra'>
                 <span class='propriedade-item'>${elem.propriedade}:</span>
@@ -106,17 +108,11 @@ class Interface {
               
             </div>
           </li>
-          <li class="lista-opcoes-item" id="stop" data-tooltip="Travar Janela">
-            <button class="btn">
-              <img src="./icones/stop.svg" alt="stop" />
-            </button>
-            <!-- <span class="tooltip">Travar Janela</span> -->
-          </li>
+          
           <li class="lista-opcoes-item" data-tooltip="Copiar">
-            <button class="btn">
+            <button class="btn" id="copy">
               <img src="./icones/copy.svg" alt="copy" />
             </button>
-            <!-- <span class="tooltip">Copiar</span> -->
           </li>
           <li class="lista-opcoes-item">
             <button class="btn">
@@ -143,11 +139,23 @@ class Interface {
       let texto = document.querySelector(`#box-rules-item-box`).value;
       if (texto) {
         this.match.insertRule(texto);
-        console.log(`Estilo Inserido!!`);
+        this.warning("Estilo Inserido!!");
+        document.querySelector(`#box-rules-item-box`).value = "";
+        // console.log(`Estilo Inserido!!`);
       }
     });
   }
-  initCopy() {}
+  initCopy() {
+    // this.rulesStorageToCopy.select();
+    const btnCopy = document.querySelector("#copy");
+    btnCopy.addEventListener("click", () => {
+      this.warning("copiando");
+      let inputTexto = document.createElement("input");
+      inputTexto.value = this.rulesStorageToCopy;
+      inputTexto.select();
+      navigator.clipboard.writeText(inputTexto.value);
+    });
+  }
   initStyle() {
     if (!document.querySelector(`#InterfaceJanela324`)) {
       const style = document.createElement(`style`);
@@ -218,7 +226,7 @@ class Interface {
   cursor:pointer
 }
 .header-container-item-parent:hover .tooltip {
-  animation: showToolTip ease-in 0.6s forwards;
+  animation: showToolTip ease-in 1s ;
 }
 #body {
   padding: 20px;
@@ -273,7 +281,7 @@ class Interface {
   border-radius: 50%;
 }
 #box-rules-item-insert:hover .tooltip {
-  animation: showToolTip ease-in 0.6s forwards;
+  animation: showToolTip ease-in 0.6s;
 }
 
 #lista-opcoes {
@@ -314,7 +322,7 @@ class Interface {
   transition: all 0.7s;
 }
 .lista-opcoes-item:hover .tooltip {
-  animation: showToolTipTravar ease-in 0.6s forwards;
+  animation: showToolTipTravar ease-in 1s ;
 }
 
 footer {
@@ -334,7 +342,7 @@ o elemento acabava por aparecer muito rapido */
 @keyframes showToolTip {
   from {
     opacity: 0;
-    transform: translate(52%, -250%);
+    transform: translate(52%, -140%);
   }
   to {
     opacity: 1;
@@ -345,7 +353,7 @@ o elemento acabava por aparecer muito rapido */
 @keyframes showToolTipTravar {
   from {
     opacity: 0;
-    transform: translate(00%, -250%);
+    transform: translate(00%, -50%);
   }
   to {
     opacity: 1;
@@ -356,6 +364,26 @@ o elemento acabava por aparecer muito rapido */
 .selecionado {
   border: 2px solid red;
 }
+.warning {
+  position:fixed;
+  padding:10px;
+  background-color: #312f2f;
+  border:2px solid #40e03d;
+  color:#40e03d;
+  font-weight: bold;
+  border-radius:10px;
+  animation: showWarning ease-in 0.5s forwards; 
+}
+@keyframes showWarning {
+  from {
+    // transform: translate(-52%, -250%);
+    top:-5%;
+    right:-10%
+  }
+  to {
+    // transform: translate(0%, -120%);
+    right:0%;
+  }
     `;
       document.head.appendChild(style);
     } else {
@@ -366,7 +394,7 @@ o elemento acabava por aparecer muito rapido */
     this.initInsertRule();
     this.initStyle();
     this.makeStatic();
-    // this.initCopy();
+    this.initCopy();
   }
   makeEvent(elem, type, func) {
     elem.addEventListener(type, func);
@@ -402,6 +430,16 @@ o elemento acabava por aparecer muito rapido */
         filho.remove();
       });
     });
+  }
+  warning(texto) {
+    const span = document.createElement("span");
+    span.textContent = texto;
+    span.classList.add("warning");
+    document.body.appendChild(span);
+    // vai retirar o aviso
+    setTimeout(() => {
+      span.remove();
+    }, 2000);
   }
 }
 
@@ -521,6 +559,12 @@ class Match {
 
   // Como o nome diz, monta um objeto com as informacoes do elemento clicado, faz u.so de getInfo()
   montaDadosElemento(elem) {
+    // let classesFiltradas = elem.getAttribute(`class`)
+    //   ? elem.getAttribute(`class`).split(` `)
+    //   : [];
+    // classesFiltradas = classesFiltradas.filter(
+    //   (classe) => classe !== "selecionado"
+    // );
     let DadosObj = {
       id_elemento: elem.getAttribute(`id`) ? elem.getAttribute(`id`) : " ",
       classes: elem.getAttribute(`class`)
@@ -534,6 +578,7 @@ class Match {
       rules: [],
     };
     return DadosObj;
+    //  elem.getAttribute(`class`)? elem.getAttribute(`class`).split(` `): []
   }
   /**Retorna uma identificacao do elemento passado */
   getIdentity(elem) {
@@ -541,7 +586,7 @@ class Match {
     // depois rever isso aqui
     if (elem.getAttribute(`id`)) {
       id = `#` + elem.getAttribute(`id`);
-    } else if (elem.classList[0]) {
+    } else if (elem.classList[0] && elem.classList[0] !== "selecionado") {
       id = `.` + elem.classList[0];
     } else {
       id = ``;
