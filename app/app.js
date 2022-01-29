@@ -48,33 +48,40 @@ class Interface {
     // console.log(e);
     div.innerHTML = `
       <header class="header-container">
-        <h2 id="name" class="header-container-item-name">#container</h2>
+        <h2 id="name" class="header-container-item-name">${
+          this.rules.identidade
+        }</h2>
         <div
           id="parent"
           class="header-container-item-parent"
-          data-tooltip="Pai"
+          data-tooltip="${this.rules.pai}"
         >
           <img src="./icones/parent.svg" alt="pai" />
-          <!-- <span class="tooltip">pai</span> -->
         </div>
       </header>
       <div id="body">
-        <ul class="body-item-regras">
-          ${this.rules.rules_array.map((elem) => {
-            if (elem.ativo) {
-              return `
-              <li class="item-regra">
+      <code>
+        <ul class="body-item-regras"> 
+          ${this.rules.rules_array
+            .map((elem) => {
+              console.log(elem);
+              if (elem.ativo) {
+                return `
+              <li class='item-regra'>
+                <span class='propriedade-item'>${elem.propriedade}:</span>
+                 <span class="valor-item">${elem.valor}</span>
+              </li>`;
+              } else {
+                `<li class="item-regra item-sobreescrito">
                 <span class="propriedade-item">${elem.propriedade}:</span>
+                
                 <span class="valor-item">${elem.valor}</span>
               </li>`;
-            } else {
-              `<li class="item-regra item-sobreescrito">
-                <span class="propriedade-item">${elem.propriedade}:</span>
-                <span class="valor-item">${elem.valor}</span>
-              </li>`;
-            }
-          })}
+              }
+            })
+            .join("")}
         </ul>
+        </code>
         <div class="box-rules">
           <textarea id="box-rules-item-box"></textarea>
           <div id="box-rules-item-insert" data-tooltip="Adicionar">
@@ -90,9 +97,13 @@ class Interface {
             </button>
             <div class="mini-modal">
               <h3>classes</h3>
-              <span class="caixa-classes-item">.btn</span>
-              <span class="caixa-classes-item">.selecionado</span>
-              <span class="caixa-classes-item">.btn1</span>
+              ${this.rules.classes
+                .map(
+                  (classe) =>
+                    `<span class='caixa-classes-item'>.${classe}</span>`
+                )
+                .join("")}
+              
             </div>
           </li>
           <li class="lista-opcoes-item" id="stop" data-tooltip="Travar Janela">
@@ -119,7 +130,7 @@ class Interface {
         <p>Desenvolvido por Andre Motta</p>
       </footer>`;
     document.body.appendChild(div);
-
+    this.toolTips();
     // div.style.left = e.clientX - 10 + "px";
     // div.style.top = e.clientY - 10 + "px";
     return div;
@@ -198,10 +209,13 @@ class Interface {
   border-top-right-radius: 20px;
 }
 .header-container-item-name {
-  font-size: 24px;
+  font-size: 18px;
   letter-spacing: 3px;
   color: #00b2ff;
   font-weight: 100;
+}
+.header-container-item-parent{
+  cursor:pointer
 }
 .header-container-item-parent:hover .tooltip {
   animation: showToolTip ease-in 0.6s forwards;
@@ -221,7 +235,7 @@ class Interface {
   color: #fba31e;
 }
 .body-item-regras .item-regra .valor-item {
-  font-size: 18px;
+  font-size: 16px;
   letter-spacing: 3px;
   color: #cc4ef8;
 }
@@ -371,6 +385,23 @@ o elemento acabava por aparecer muito rapido */
     } else {
       console.log(`Impossivel destruir a janela `);
     }
+  }
+  toolTips() {
+    const tooltips = document.querySelectorAll("[data-tooltip]");
+    console.log(tooltips);
+    tooltips.forEach((tag) => {
+      tag.addEventListener("mouseenter", () => {
+        let texto = tag.dataset.tooltip;
+        const span = document.createElement("span");
+        span.classList.add("tooltip");
+        span.textContent = texto;
+        tag.appendChild(span);
+      });
+      tag.addEventListener("mouseleave", () => {
+        const filho = tag.querySelector(".tooltip");
+        filho.remove();
+      });
+    });
   }
 }
 
