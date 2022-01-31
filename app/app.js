@@ -74,7 +74,7 @@ class Interface {
                  <span class="valor-item">${elem.valor}</span>
               </li>`;
               } else {
-                `<li class="item-regra item-sobreescrito">
+                return `<li class="item-regra item-sobreescrito">
                 <span class="propriedade-item">${elem.propriedade}:</span>
                 
                 <span class="valor-item">${elem.valor}</span>
@@ -602,11 +602,13 @@ class Match {
     return inline.getInlineRules();
   }
 
-  /**Vai inserir uma regra em uma das folhas de extilos externa, escreva uma regra como se fosse
-   * colocar no css mesmo, a regra nao vai ser especifica do elemento selecionado*/
+  /**Vai inserir uma regra de modo inline. */
   insertRule(rule) {
-    const folha = document.styleSheets[0];
-    folha.insertRule(rule, folha.cssRules.length);
+    rule = rule.split(":");
+    // const folha = document.styleSheets[0];
+    // folha.insertRule(rule, folha.cssRules.length);
+    this.#elem.style[rule[0]] = rule[1];
+    console.log(rule);
   }
   /**
    usei essas funçoes como closures pq só vão ser utilizadas aqui, vai fazer um tratamento no objeto
